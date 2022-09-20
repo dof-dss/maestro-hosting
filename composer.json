@@ -1,0 +1,18 @@
+{
+    "name": "dof-dss/maestro-hosting",
+    "description": "Maestro hosting resources",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "DofDss\\MaestroHosting\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "OMAHM",
+            "email": "hello@onemanandhismouse.com"
+        }
+    ],
+    "require": {}
+}
