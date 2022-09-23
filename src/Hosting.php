@@ -1,17 +1,16 @@
 <?php
 
-namespace MaestroHosting;
+namespace Maestro\Hosting;
 
-use League\Flysystem\Filesystem;
-use Maestro\Models\Project;
-use Maestro\Services\FileSystemDecorator;
-use Maestro\Utils;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use League\Flysystem\FilesystemAdapter;
+use Maestro\Core\HostingInterface;
+use Maestro\Core\ProjectInterface;
+use Symfony\Component\Console\Style\StyleInterface;
 
 /**
  * Base class for hosting services.
  */
-abstract class Hosting {
+abstract class Hosting implements HostingInterface {
 
   /**
    * The service status.
@@ -21,32 +20,25 @@ abstract class Hosting {
   protected bool $isEnabled = FALSE;
 
   /**
-   * The Dependency Injection container.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerBuilder
-   */
-  protected $container;
-
-  /**
    * The project definition.
    *
-   * @var \Maestro\Models\Project
+   * @var \Maestro\Core\ProjectInterface
    */
   protected $project;
 
   /**
    * Symfony Style instance.
    *
-   * @var \Symfony\Component\Console\Style\SymfonyStyle
+   * @var \Symfony\Component\Console\Style\StyleInterface
    */
   protected $io;
 
   /**
-   * The FileSystemDecorator.
+   * The FileSystem.
    *
-   * @var \Maestro\Services\FileSystemDecorator
+   * @var \League\Flysystem\FilesystemAdapter
    */
-  private FileSystemDecorator $fs;
+  private FilesystemAdapter $fs;
 
   /**
    * The service instructions.
@@ -61,29 +53,18 @@ abstract class Hosting {
    * @throws \Exception
    */
   public function __construct() {
-    $this->container = Utils::container();
-
-//    $this->fs = $this->container->get('maestro.filesystem');
-    $this->project = new Project();
-
-    // Enable if the hosting service has the required directory configuration
-    // directory in the project root directory.
-
-    $this->isEnabled = $this->fs()->exists($this->path());
+    $this->isEnabled = $this->fs()->directoryExists($this->path());
   }
 
   /**
-   * Generates the hosting setup and configuration.
-   *
-   * @param \Symfony\Component\Console\Style\SymfonyStyle $io
-   *   Symfony style instance.
+   * {@inheritdoc}
    */
-  public function build(SymfonyStyle $io, Filesystem $fs) {
-    $io->section($this->name());
+  public function build(StyleInterface $io, FilesystemAdapter $fs, ProjectInterface $project) {
+    $this->io()->section($this->name());
   }
 
   /**
-   * Returns service instructions.
+   * {@inheritdoc}
    */
   public function instructions() {
     return $this->instructions;
@@ -97,40 +78,30 @@ abstract class Hosting {
   }
 
   /**
-   * The name of the hosting service.
-   *
-   * @return string
-   *   Hosting service name.
+   * {@inheritdoc}
    */
   public function name() {
     return (new \ReflectionClass($this))->getShortName();
   }
 
   /**
-   * Returns the DI container.
+   * Filepath to the current hosting service resources.
    *
-   * @return \Symfony\Component\DependencyInjection\ContainerBuilder
-   *   Dependency Injection container.
+   * @return string
+   *   Relative filepath to the hosting resources within the vendor directory.
    */
-  protected function container() {
-    return $this->getApplication()->container();
-  }
-
-  /**
-   * Indicates if the hosting service is enabled.
-   *
-   * @return bool
-   *   True for enabled, otherwise false.
-   */
-  public function isEnabled() {
-    return $this->isEnabled;
+  public function resourcesPath() {
+    return 'vendor/dof-dss/maestro-hosting/resources/'
+      . $this->project()->type()
+      . '/' . $this->name()
+      . '/';
   }
 
   /**
    * The Filesystem.
    *
-   * @return mixed|object|null
-   *   The Filesystem decorator instance.
+   * @return \League\Flysystem\FilesystemAdapter
+   *   The Filesystem instance.
    */
   protected function fs() {
     return $this->fs;
@@ -139,8 +110,9 @@ abstract class Hosting {
   /**
    * The project definition.
    *
-   * @return \Maestro\Models\Project
-   *   Current project definition.
+   * @return \Maestro\Core\ProjectInterface
+   *   The Project instance.
+   *
    */
   protected function project() {
     return $this->project;
@@ -149,25 +121,11 @@ abstract class Hosting {
   /**
    * Symfony Style.
    *
-   * @return \Symfony\Component\Console\Style\SymfonyStyle
+   * @return \Symfony\Component\Console\Style\StyleInterface
    *   The Symfony Style instance.
    */
   protected function io() {
     return $this->io;
-  }
-
-
-  /**
-   * Returns the filepath to hosting service.
-   *
-   * @return string
-   *   The relative filepath to the hosting service within the vendor directory.
-   */
-  public function path() {
-    return 'vendor/dof-dss/maestro-hosting/resources/'
-      . $this->project()->type()
-      . '/' . $this->name()
-      . '/';
   }
 
 }

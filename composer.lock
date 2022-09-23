@@ -4,8 +4,45 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1bf4669cbd8d7b04752d506b957cc64c",
+    "content-hash": "1875c6e29cb1348689d91ae3743f0cbe",
     "packages": [
+        {
+            "name": "dof-dss/maestro-core",
+            "version": "0.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dof-dss/maestro-core.git",
+                "reference": "fa1bf41bb5e0e187175643ad241df46bf0643b59"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dof-dss/maestro-core/zipball/fa1bf41bb5e0e187175643ad241df46bf0643b59",
+                "reference": "fa1bf41bb5e0e187175643ad241df46bf0643b59",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Maestro\\Core\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "OMAHM",
+                    "email": "hello@onemanandhismouse.com"
+                }
+            ],
+            "description": "Maestro core composition project",
+            "support": {
+                "issues": "https://github.com/dof-dss/maestro-core/issues",
+                "source": "https://github.com/dof-dss/maestro-core/tree/0.0.3"
+            },
+            "time": "2022-09-22T20:00:16+00:00"
+        },
         {
             "name": "league/flysystem",
             "version": "3.5.1",

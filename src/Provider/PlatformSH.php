@@ -1,6 +1,6 @@
 <?php
 
-namespace MaestroHosting/Provider;
+namespace Maestro\Hosting\Provider;
 
 use Maestro\Utils;
 use Symfony\Component\Yaml\Tag\TaggedValue;

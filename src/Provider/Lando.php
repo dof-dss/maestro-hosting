@@ -1,8 +1,12 @@
 <?php
 
-namespace MaestroHosting/Provider;
+namespace Maestro\Hosting\Provider;
 
+use League\Flysystem\Filesystem;
 use Maestro\Utils;
+use MaestroHosting\Hosting;
+use MaestroHosting\HostingInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Provides hosting setup and configuration for Lando.
@@ -12,8 +16,8 @@ class Lando extends Hosting implements HostingInterface {
   /**
    * {@inheritdoc}
    */
-  public function build($io) {
-    parent::build($io);
+  public function build(SymfonyStyle $io, Filesystem $fs) {
+    parent::build($io, $fs);
     $data = [];
 
     $data['name'] = Utils::createApplicationId($this->project()->name());

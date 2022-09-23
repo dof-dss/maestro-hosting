@@ -1,9 +1,12 @@
 <?php
 
-namespace MaestroHosting/Provider;
+namespace Maestro\Hosting\Provider;
 
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
+use Maestro\ProjectInterface;
+use MaestroHosting\Hosting;
+use MaestroHosting\HostingInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
@@ -15,8 +18,8 @@ class Common extends Hosting implements HostingInterface {
   /**
    * {@inheritdoc}
    */
-  public function build(SymfonyStyle $io, Filesystem $fs) {
-    parent::build($io, $fs);
+  public function build(SymfonyStyle $io, Filesystem $fs, ProjectInterface $project) {
+    parent::build($io, $fs, $project);
 
     $io->text('Verifying setup for ' . count($this->project()->sites()) . ' site(s).');
     foreach ($this->project()->sites() as $site_id => $site) {
@@ -25,7 +28,7 @@ class Common extends Hosting implements HostingInterface {
       if (!$fs->directoryExists('project/sites/' . $site_id)) {
         $io->text('Creating a site directory for ' . $site_id . ' under project/sites/');
         $fs->createDirectory('project/sites/' . $site_id);
-        $fs->copy($this->path() . 'files/multisite.settings.php', 'project/sites/' . $site_id . '/settings.php');
+        $fs->copy($this->resourcesPath() . 'files/multisite.settings.php', 'project/sites/' . $site_id . '/settings.php');
       }
 
       // Enable our multisite entry by linking from the sites directory to
@@ -56,7 +59,7 @@ class Common extends Hosting implements HostingInterface {
     // Copy base Drupal services file is one doesn't already exist.
     if (!$fs->fileExists('web/sites/services.yml')) {
       $io->text('Creating Drupal services file from defaults.');
-      $fs->copy($this->path() . 'files/default.services.yml', 'web/sites/services.yml');
+      $fs->copy($this->resourcesPath() . 'files/default.services.yml', 'web/sites/services.yml');
     }
 
   }
