@@ -2,7 +2,13 @@
 
 namespace Maestro\Hosting\Provider;
 
-use Maestro\Utils;
+use League\Flysystem\FilesystemAdapter;
+use Maestro\Core\ProjectInterface;
+use Maestro\Core\Utils;
+use Maestro\Hosting\Hosting;
+use Maestro\Core\HostingInterface;
+use Symfony\Component\Console\Style\StyleInterface;
+use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Tag\TaggedValue;
 
 /**
@@ -13,19 +19,19 @@ class PlatformSH extends Hosting implements HostingInterface {
   /**
    * {@inheritdoc}
    */
-  public function build($io) {
-    parent::build($io);
+  public function build(StyleInterface $io, FilesystemAdapter $fs, ProjectInterface $project) {
+    parent::build($io, $fs, $project);
     $routes = [];
     // Flag to determine if we need to include Solr configuration
     // in the Platform services file.
     $solr_required = FALSE;
 
-    $platform = $this->fs()->readFile($this->path() . '/templates/.platform.app.template.yaml');
-    $services = $this->fs()->readFile($this->path() . '/templates/.services.template.yaml');
+    $platform = Yaml::parse($fs->read($this->resourcesPath() . 'templates/.platform.app.template.yaml'));
+    $services = Yaml::parse($fs->read($this->resourcesPath() . '/templates/.services.template.yaml'));
 
-    $platform['name'] = Utils::createApplicationId($this->project()->name());
+    $platform['name'] = Utils::createApplicationId($project->name());
 
-    foreach ($this->project()->sites() as $site_id => $site) {
+    foreach ($project->sites() as $site_id => $site) {
 
       // Create database relationship.
       if (!empty($site['database'])) {
@@ -107,24 +113,24 @@ class PlatformSH extends Hosting implements HostingInterface {
 
     // Write Platform configuration files.
     $io->writeln('Writing platform configuration, services and routes.');
-    $this->fs()->dumpFile('/.platform.app.yaml', $platform);
-    $this->fs()->dumpFile('/.platform/services.yaml', $services);
-    $this->fs()->dumpFile('/.platform/routes.yaml', $routes);
+    $fs->write('.platform.app.yaml', Yaml::dump($platform, 6));
+    $fs->write('.platform/services.yaml', Yaml::dump($services, 6));
+    $fs->write('.platform/routes.yaml', Yaml::dump($routes, 6));
 
     // Copy Solr configuration to platform directory.
     $io->writeln('Copying Solr configuration.');
-    $this->fs()->mirror($this->path() . '/files/solr_config', '/.platform/solr_config');
+    $fs->copy($this->resourcesPath() . 'files/solr_config', '.platform/solr_config');
 
     // Copy environment file.
     $io->writeln('Copying environment file.');
-    $this->fs()->copy($this->path() . '/files/.environment', '/.environment');
+    $fs->copy($this->resourcesPath() . 'files/.environment', '.environment');
 
     // Copy Redis installer file.
     $io->writeln('Copying Redis install script.');
-    $this->fs()->copy($this->path() . '/files/install-redis.sh', '/install-redis.sh');
+    $fs->copy($this->resourcesPath() . 'files/install-redis.sh', 'install-redis.sh');
 
-    $this->addInstructions('Download PlatformSH databases: platform db:dump -p ' . $this->project()->id());
-    $this->addInstructions('Download PlatformSH files: platform mount:download -p ' . $this->project()->id());
+    $this->addInstructions('Download PlatformSH databases: platform db:dump -p ' . $project->id());
+    $this->addInstructions('Download PlatformSH files: platform mount:download -p ' . $project->id());
   }
 
 }

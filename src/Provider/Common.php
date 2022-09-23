@@ -2,12 +2,11 @@
 
 namespace Maestro\Hosting\Provider;
 
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\Filesystem;
-use Maestro\ProjectInterface;
-use MaestroHosting\Hosting;
-use MaestroHosting\HostingInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use League\Flysystem\FilesystemAdapter;
+use Maestro\Core\ProjectInterface;
+use Maestro\Hosting\Hosting;
+use Maestro\Core\HostingInterface;
+use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
@@ -18,7 +17,7 @@ class Common extends Hosting implements HostingInterface {
   /**
    * {@inheritdoc}
    */
-  public function build(SymfonyStyle $io, Filesystem $fs, ProjectInterface $project) {
+  public function build(StyleInterface $io, FilesystemAdapter $fs, ProjectInterface $project) {
     parent::build($io, $fs, $project);
 
     $io->text('Verifying setup for ' . count($this->project()->sites()) . ' site(s).');
