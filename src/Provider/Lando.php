@@ -2,14 +2,12 @@
 
 namespace Maestro\Hosting\Provider;
 
-use League\Flysystem\FilesystemAdapter;
+use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\ProjectInterface;
 use Maestro\Core\Utils;
 use Maestro\Hosting\Hosting;
 use Maestro\Core\HostingInterface;
-use Maestro\Shell\Filesystem\FilesystemManager;
 use Symfony\Component\Console\Style\StyleInterface;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Provides hosting setup and configuration for Lando.
@@ -19,7 +17,7 @@ class Lando extends Hosting implements HostingInterface {
   /**
    * {@inheritdoc}
    */
-  public function build(StyleInterface $io, FilesystemAdapter $fs, ProjectInterface $project) {
+  public function build(StyleInterface $io, Filesystem $fs, ProjectInterface $project) {
     parent::build($io, $fs, $project);
     $data = [];
 
@@ -45,66 +43,66 @@ class Lando extends Hosting implements HostingInterface {
 
     // Copy the base configuration for Lando.
     $io->writeln("Creating Lando base configuration file.");
-    $fs->copy($this->resourcesPath() . 'templates/.lando.base.yml', '.lando.base.yml');
+    $fs->copy($this->resourcesPath() . '/templates/.lando.base.yml', '/.lando.base.yml');
 
     // Create project specific Lando file.
     $io->writeln("Creating Lando project configuration file.");
-    $fs->write('.lando.yml', Yaml::dump($data, 6));
+    $fs->write('/.lando.yml', $data);
 
     // Copy Lando resources to the project.
     $io->writeln("Copying Lando resources to project.");
-    $fs->createDirectory('.lando');
-    $fs->copy($this->resourcesPath() . 'files/', '.lando');
+    $fs->createDirectory('/.lando');
+    $fs->copy($this->resourcesPath() . '/files/', '/.lando');
 
     // Copy Lando Drupal services file if one doesn't already exist.
-    if (!$fs->fileExists('web/sites/default/services.yml')) {
+    if (!$fs->exists('/web/sites/default/services.yml')) {
       $io->writeln("Copying Lando Drupal services file.");
-      $fs->copy($this->resourcesPath() . 'templates/drupal.services.yml', 'web/sites/default/services.yml');
+      $fs->copy($this->resourcesPath() . '/templates/drupal.services.yml', '/web/sites/default/services.yml');
     }
 
     // Copy Lando Redis config file if one doesn't already exist.
-    if (!$fs->fileExists('web/sites/default/redis.services.yml')) {
+    if (!$fs->exists('/web/sites/default/redis.services.yml')) {
       $io->writeln("Copying Lando Redis config file.");
-      $fs->copy($this->resourcesPath() . 'templates/redis.services.yml', 'web/sites/default/redis.services.yml');
+      $fs->copy($this->resourcesPath() . '/templates/redis.services.yml', '/web/sites/default/redis.services.yml');
     }
 
     // Create public files directory if one doesn't already exist.
-    if (!$fs->directoryExists('web/files')) {
+    if (!$fs->exists('/web/files')) {
       $io->writeln("Creating Drupal public files directory.");
-      $fs->createDirectory('web/files');
+      $fs->createDirectory('/web/files');
     }
 
     // Create private files directory if one doesn't already exist.
-    if (!$fs->directoryExists('.lando/private')) {
+    if (!$fs->exists('/.lando/private')) {
       $io->writeln("Creating Drupal private files directory.");
-      $fs->createDirectory('.lando/private');
+      $fs->createDirectory('/.lando/private');
     }
 
     // Check for an .env file and copy example if missing.
-    if (!$fs->fileExists('.env')) {
+    if (!$fs->exists('/.env')) {
       // Copy from the sample env file as it may have project specific entries.
       // If sample.en doesn't exist, copy the basic version.
-      if (!$fs->fileExists('.env.sample')) {
-        $fs->copy($this->resourcesPath() . 'templates/.env.sample', '.env.sample');
+      if (!$fs->exists('/.env.sample')) {
+        $fs->copy($this->resourcesPath() . '/templates/.env.sample', '/.env.sample');
       }
 
-      $fs->copy('.env.sample', '.env');
+      $fs->copy('/.env.sample', '/.env');
       $io->success('Created local .env file');
     }
 
     // Read .env file to check for some default Drupal environment settings.
-    $env_data = parse_ini_file($fs->read('.env'));
+    $env_data = $fs->read('.env');
 
     if (empty($env_data['HASH_SALT'])) {
       if ($io->confirm('Hash Salt was not found in the .env file. Would you like to add one?')) {
         $env_data['HASH_SALT'] = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(random_bytes(55)));
-        $fs->write('.env', FilesystemManager::arrayToIni($env_data));
+        $fs->write('/.env', $env_data);
         $io->success('Creating local site hash within .env file');
       }
     }
 
     // Inform the user if composer install is needed.
-    if (!$fs->directoryExists('vendor')) {
+    if (!$fs->exists('/vendor')) {
       $this->addInstructions("Run 'lando composer install'");
     }
 

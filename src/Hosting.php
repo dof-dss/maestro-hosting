@@ -2,7 +2,7 @@
 
 namespace Maestro\Hosting;
 
-use League\Flysystem\FilesystemAdapter;
+use Maestro\Core\Filesystem\Filesystem;
 use Maestro\Core\HostingInterface;
 use Maestro\Core\ProjectInterface;
 use Symfony\Component\Console\Style\StyleInterface;
@@ -36,9 +36,9 @@ abstract class Hosting implements HostingInterface {
   /**
    * The FileSystem.
    *
-   * @var \League\Flysystem\FilesystemAdapter
+   * @var \Maestro\Core\Filesystem\Filesystem
    */
-  private FilesystemAdapter $fs;
+  private Filesystem $fs;
 
   /**
    * The service instructions.
@@ -59,7 +59,7 @@ abstract class Hosting implements HostingInterface {
   /**
    * {@inheritdoc}
    */
-  public function build(StyleInterface $io, FilesystemAdapter $fs, ProjectInterface $project) {
+  public function build(StyleInterface $io, Filesystem $fs, ProjectInterface $project) {
     $this->io()->section($this->name());
   }
 
@@ -93,14 +93,13 @@ abstract class Hosting implements HostingInterface {
   public function resourcesPath() {
     return 'vendor/dof-dss/maestro-hosting/resources/'
       . $this->project()->type()
-      . '/' . $this->name()
-      . '/';
+      . '/' . $this->name();
   }
 
   /**
    * The Filesystem.
    *
-   * @return \League\Flysystem\FilesystemAdapter
+   * @return \Maestro\Core\Filesystem\Filesystem
    *   The Filesystem instance.
    */
   protected function fs() {

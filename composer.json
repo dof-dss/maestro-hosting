@@ -15,7 +15,6 @@
         }
     ],
     "require": {
-        "league/flysystem": "^3.5",
-        "dof-dss/maestro-core": "^0.0.3"
+        "dof-dss/maestro-core": "^0.0.6"
     }
 }
