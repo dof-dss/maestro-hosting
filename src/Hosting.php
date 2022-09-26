@@ -2,7 +2,7 @@
 
 namespace Maestro\Hosting;
 
-use Maestro\Core\Filesystem\Filesystem;
+use Maestro\Core\FilesystemInterface;
 use Maestro\Core\HostingInterface;
 use Maestro\Core\ProjectInterface;
 use Symfony\Component\Console\Style\StyleInterface;
@@ -36,9 +36,9 @@ abstract class Hosting implements HostingInterface {
   /**
    * The FileSystem.
    *
-   * @var \Maestro\Core\Filesystem\Filesystem
+   * @var \Maestro\Core\FilesystemInterface
    */
-  private Filesystem $fs;
+  private FilesystemInterface $fs;
 
   /**
    * The service instructions.
@@ -59,7 +59,7 @@ abstract class Hosting implements HostingInterface {
   /**
    * {@inheritdoc}
    */
-  public function build(StyleInterface $io, Filesystem $fs, ProjectInterface $project) {
+  public function build(StyleInterface $io, FilesystemInterface $fs, ProjectInterface $project) {
     $this->io()->section($this->name());
   }
 
@@ -99,7 +99,7 @@ abstract class Hosting implements HostingInterface {
   /**
    * The Filesystem.
    *
-   * @return \Maestro\Core\Filesystem\Filesystem
+   * @return \Maestro\Core\FilesystemInterface
    *   The Filesystem instance.
    */
   protected function fs() {

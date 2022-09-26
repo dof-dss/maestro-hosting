@@ -2,23 +2,22 @@
 
 namespace Maestro\Hosting\Provider;
 
-use Maestro\Core\Filesystem\Filesystem;
+use Maestro\Core\FilesystemInterface;
 use Maestro\Core\ProjectInterface;
 use Maestro\Core\Utils;
 use Maestro\Hosting\Hosting;
-use Maestro\Core\HostingInterface;
 use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Component\Yaml\Tag\TaggedValue;
 
 /**
  * Provides hosting setup and configuration for PlatformSH.
  */
-class PlatformSH extends Hosting implements HostingInterface {
+class PlatformSH extends Hosting {
 
   /**
    * {@inheritdoc}
    */
-  public function build(StyleInterface $io, Filesystem $fs, ProjectInterface $project) {
+  public function build(StyleInterface $io, FilesystemInterface $fs, ProjectInterface $project) {
     parent::build($io, $fs, $project);
     $routes = [];
     // Flag to determine if we need to include Solr configuration

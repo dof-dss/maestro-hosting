@@ -2,22 +2,21 @@
 
 namespace Maestro\Hosting\Provider;
 
-use Maestro\Core\Filesystem\Filesystem;
+use Maestro\Core\FilesystemInterface;
 use Maestro\Core\ProjectInterface;
 use Maestro\Core\Utils;
 use Maestro\Hosting\Hosting;
-use Maestro\Core\HostingInterface;
 use Symfony\Component\Console\Style\StyleInterface;
 
 /**
  * Provides hosting setup and configuration for Lando.
  */
-class Lando extends Hosting implements HostingInterface {
+class Lando extends Hosting {
 
   /**
    * {@inheritdoc}
    */
-  public function build(StyleInterface $io, Filesystem $fs, ProjectInterface $project) {
+  public function build(StyleInterface $io, FilesystemInterface $fs, ProjectInterface $project) {
     parent::build($io, $fs, $project);
     $data = [];
 
