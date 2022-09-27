@@ -117,7 +117,7 @@ class PlatformSH extends Hosting {
 
     // Copy Solr configuration to platform directory.
     $io->writeln('Copying Solr configuration.');
-    $fs->copy($this->resourcesPath() . '/files/solr_config', '/.platform/solr_config');
+    $fs->copyDirectory($this->resourcesPath() . '/files/solr_config', '/.platform/solr_config');
 
     // Copy environment file.
     $io->writeln('Copying environment file.');

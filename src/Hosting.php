@@ -48,25 +48,20 @@ abstract class Hosting implements HostingInterface {
   protected array $instructions = [];
 
   /**
-   * Hosting constructor.
-   *
-   * @throws \Exception
-   */
-  public function __construct() {
-    $this->isEnabled = $this->fs()->directoryExists($this->path());
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function build(StyleInterface $io, FilesystemInterface $fs, ProjectInterface $project) {
+    $this->io = $io;
+    $this->fs = $fs;
+    $this->project = $project;
+
     $this->io()->section($this->name());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function instructions() {
+  public function instructions() : array {
     return $this->instructions;
   }
 
@@ -80,7 +75,7 @@ abstract class Hosting implements HostingInterface {
   /**
    * {@inheritdoc}
    */
-  public function name() {
+  public function name() : string {
     return (new \ReflectionClass($this))->getShortName();
   }
 
@@ -91,7 +86,7 @@ abstract class Hosting implements HostingInterface {
    *   Relative filepath to the hosting resources within the vendor directory.
    */
   public function resourcesPath() {
-    return 'vendor/dof-dss/maestro-hosting/resources/'
+    return '/vendor/dof-dss/maestro-hosting/resources/'
       . $this->project()->type()
       . '/' . $this->name();
   }

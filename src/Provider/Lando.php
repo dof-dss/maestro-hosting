@@ -51,7 +51,7 @@ class Lando extends Hosting {
     // Copy Lando resources to the project.
     $io->writeln("Copying Lando resources to project.");
     $fs->createDirectory('/.lando');
-    $fs->copy($this->resourcesPath() . '/files/', '/.lando');
+    $fs->copyDirectory($this->resourcesPath() . '/files', '/.lando');
 
     // Copy Lando Drupal services file if one doesn't already exist.
     if (!$fs->exists('/web/sites/default/services.yml')) {
@@ -106,7 +106,6 @@ class Lando extends Hosting {
     }
 
     $this->addInstructions("Import platform databases using 'lando db-import <database name> <dump file>'");
-
   }
 
 }
