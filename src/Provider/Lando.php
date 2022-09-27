@@ -90,7 +90,7 @@ class Lando extends Hosting {
     }
 
     // Read .env file to check for some default Drupal environment settings.
-    $env_data = $fs->read('.env');
+    $env_data = $fs->read('/.env');
 
     if (empty($env_data['HASH_SALT'])) {
       if ($io->confirm('Hash Salt was not found in the .env file. Would you like to add one?')) {
