@@ -23,6 +23,7 @@ class PlatformSH extends Hosting {
     // Flag to determine if we need to include Solr configuration
     // in the Platform services file.
     $solr_required = FALSE;
+    $default_site_entries = 0;
 
     $platform = $fs->read($this->resourcesPath() . '/templates/.platform.app.template.yaml');
     $services = $fs->read($this->resourcesPath() . '/templates/.services.template.yaml');
@@ -69,9 +70,25 @@ class PlatformSH extends Hosting {
         $platform['crons'][$site_id]['cmd'] = $site['cron_cmd'];
       }
 
-      // Create development instance route.
-      if ($site['status'] !== 'production') {
-        // Create Platform SH route.
+      // Create routes.
+      if ($site['default'] === true) {
+        $default_site_entries++;
+        // Create Platform SH route for the default site.
+        $routes['https://www.' . $site['url'] . '.{default}/'] = [
+          'type' => 'upstream',
+          'upstream' => $platform['name'] . ':http',
+          'cache' => [
+            'enabled' => 'false',
+          ],
+        ];
+
+        $routes['https://' . $site['url'] . '.{default}/'] = [
+          'type' => 'redirect',
+          'to' => 'https://www.' . $site['url'] . '.{default}/',
+        ];
+      }
+      elseif ($site['status'] !== 'production' && $site['default'] !== true) {
+        // Create routes for dev sites.
         $routes['https://www.' . $site['url'] . '/'] = [
           'type' => 'upstream',
           'upstream' => $platform['name'] . ':http',
@@ -126,6 +143,14 @@ class PlatformSH extends Hosting {
     // Copy Redis installer file.
     $io->writeln('Copying Redis install script.');
     $fs->copy($this->resourcesPath() . '/files/install-redis.sh', '/install-redis.sh');
+
+    // Warn if we have no default site or more than one defined.
+    if ($default_site_entries === 0) {
+      $io->warning("This project does not have a default site enabled.");
+    }
+    elseif ($default_site_entries > 1) {
+      $io->warning("This project has multiple sites designated as the default site.");
+    }
 
     $this->addInstructions('Download PlatformSH databases: platform db:dump -p ' . $project->id());
     $this->addInstructions('Download PlatformSH files: platform mount:download -p ' . $project->id());
