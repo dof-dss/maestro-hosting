@@ -46,7 +46,7 @@ class Lando extends Hosting {
 
     // Create project specific Lando file.
     $io->writeln("Creating Lando project configuration file.");
-    $fs->write('/.lando.yml', $data);
+    $fs->write('/.lando.yml', $data, TRUE);
 
     // Copy Lando resources to the project.
     $io->writeln("Copying Lando resources to project.");

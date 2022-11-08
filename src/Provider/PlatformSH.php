@@ -128,9 +128,9 @@ class PlatformSH extends Hosting {
 
     // Write Platform configuration files.
     $io->writeln('Writing platform configuration, services and routes.');
-    $fs->write('/.platform.app.yaml', $platform);
-    $fs->write('/.platform/services.yaml', $services);
-    $fs->write('/.platform/routes.yaml', $routes);
+    $fs->write('/.platform.app.yaml', $platform, TRUE);
+    $fs->write('/.platform/services.yaml', $services, TRUE);
+    $fs->write('/.platform/routes.yaml', $routes, TRUE);
 
     // Copy Solr configuration to platform directory.
     $io->writeln('Copying Solr configuration.');
