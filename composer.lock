@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "47f0b997d01bae52798816c8cf8730bf",
+    "content-hash": "05634546421b9375010deb7a24223160",
     "packages": [
         {
             "name": "dof-dss/maestro-core",
-            "version": "0.0.8",
+            "version": "1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dof-dss/maestro-core.git",
-                "reference": "781058cae2beaca8752b992a08ae92790dd1ce70"
+                "reference": "714dfb5d6df7d7a13516f3d6e0c396266571f56b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dof-dss/maestro-core/zipball/781058cae2beaca8752b992a08ae92790dd1ce70",
-                "reference": "781058cae2beaca8752b992a08ae92790dd1ce70",
+                "url": "https://api.github.com/repos/dof-dss/maestro-core/zipball/714dfb5d6df7d7a13516f3d6e0c396266571f56b",
+                "reference": "714dfb5d6df7d7a13516f3d6e0c396266571f56b",
                 "shasum": ""
             },
             "type": "library",
@@ -39,9 +39,9 @@
             "description": "Maestro core composition project",
             "support": {
                 "issues": "https://github.com/dof-dss/maestro-core/issues",
-                "source": "https://github.com/dof-dss/maestro-core/tree/0.0.8"
+                "source": "https://github.com/dof-dss/maestro-core/tree/1.0"
             },
-            "time": "2022-09-27T08:39:09+00:00"
+            "time": "2022-11-17T12:58:20+00:00"
         }
     ],
     "packages-dev": [],
