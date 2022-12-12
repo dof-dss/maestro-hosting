@@ -31,8 +31,8 @@ class PlatformSH extends Hosting {
     $platform['name'] = Utils::createApplicationId($project->name());
 
     /* Set disk sizes from project settings */
-    $platform['disk'] = $project->project_disk_size();
-    $services['db']['disk'] = $project->db_disk_size();
+    $platform['disk'] = $project->project_disk_size() ?: 8000;
+    $services['db']['disk'] = $project->db_disk_size() ?: 4000;
 
     foreach ($project->sites() as $site_id => $site) {
 
