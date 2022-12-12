@@ -20,7 +20,7 @@ runtime:
     - redis
 
 # The size of the persistent disk of the application (in MB).
-disk: 30720
+disk: <placeholder>
 
 # The 'mounts' describe writable, persistent filesystem mounts in the application.
 mounts:
