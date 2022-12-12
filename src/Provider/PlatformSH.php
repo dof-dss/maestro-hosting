@@ -29,6 +29,8 @@ class PlatformSH extends Hosting {
     $services = $fs->read($this->resourcesPath() . '/templates/.services.template.yaml');
 
     $platform['name'] = Utils::createApplicationId($project->name());
+
+    /* Set disk sizes from project settings */
     $platform['disk'] = $project->project_disk_size();
     $services['db']['disk'] = $project->db_disk_size();
 
