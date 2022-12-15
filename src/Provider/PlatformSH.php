@@ -74,6 +74,11 @@ class PlatformSH extends Hosting {
         $platform['crons'][$site_id]['cmd'] = $site['cron_cmd'];
       }
 
+      // Create cron entry for Logz.io.
+      $platform['crons']['logging']['spec'] = '*/5 * * * *';
+      $platform['crons']['logging']['commands']['start'] = '/bin/bash /app/cronjob.sh';
+      $platform['crons']['logging']['shutdown_timeout'] = 290;
+
       // Create routes.
       if ($site['default'] === true) {
         $default_site_entries++;
