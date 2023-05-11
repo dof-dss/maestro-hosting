@@ -54,6 +54,8 @@ build:
 hooks:
   build: |
     set -e
+    echo "Update robots.txt with Unity customisations"
+    cp -f web/robots_unity.txt web/robots.txt
   # During post_deploy the sites are available (see https://docs.platform.sh/configuration/app/hooks.html)
   post_deploy: |
     set -e
