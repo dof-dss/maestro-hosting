@@ -83,8 +83,8 @@ hooks:
         # Set site to readonly just in case editors are logged on.
         drush -l $site cset readonlymode.settings enabled 1 -y
         drush -l $site -y cache-rebuild
-        drush -l $site -y config-import
         drush -l $site -y updatedb
+        drush -l $site -y config-import
         drush -l $site import-all-if-installed safe
         if [ "$PLATFORM_ENVIRONMENT_TYPE" = production ]; then
           # Disable QA logons
