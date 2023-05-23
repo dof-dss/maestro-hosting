@@ -178,3 +178,6 @@ web:
         # Provide a longer TTL (2 weeks) for aggregated CSS and JS files.
         '^/sites/default/files/(css|js)':
           expires: 2w
+
+relationships:
+  redis: "redis:redis"
