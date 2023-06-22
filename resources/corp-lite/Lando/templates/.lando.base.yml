@@ -73,13 +73,13 @@ tooling:
       test:
         passthrough: true
   phpunit:
-    description: "Run PHPUnit tests. You can pass options, e.g. --group=corplite, as you require"
+    description: "Run PHPUnit tests. You can pass options, e.g. --group=corp-lite, as you require"
     service: appserver
     cmd: cd /app/web/core && /app/vendor/bin/phpunit -c /app/web/core/phpunit.xml
   phpcs:
     description: Run PHPCS checks against all custom Drupal 8 code
     service: appserver
-    cmd: /app/phpcs.sh "/app" "/app/web/sites /app/web/modules/origins /app/web/modules/custom /app/web/themes/custom /app/web/profiles/corplite"
+    cmd: /app/phpcs.sh "/app" "/app/web/sites /app/web/modules/origins /app/web/modules/custom /app/web/themes/custom /app/web/profiles/corp-lite"
   drck:
     description: Run drupal-check for Drupal 9 compatibility e.g. 'lando drck ./'
     service: appserver
