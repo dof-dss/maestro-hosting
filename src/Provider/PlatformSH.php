@@ -79,37 +79,59 @@ class PlatformSH extends Hosting {
       $platform['crons']['logging']['commands']['start'] = '/bin/bash /app/cronjob.sh';
       $platform['crons']['logging']['shutdown_timeout'] = 290;
 
-      // Create routes.
-      if ($site['default'] === true) {
-        $default_site_entries++;
-        // Create Platform SH route for the default site.
-        $routes['https://www.' . $site['url'] . '.{default}/'] = [
-          'type' => 'upstream',
-          'upstream' => $platform['name'] . ':http',
-          'cache' => [
-            'enabled' => 'false',
-          ],
-        ];
+      // Create platform url routing.
+      // Process sites that do not use a 'www' subdomain.
+      if (array_key_exists('www', $site) && $site['www'] == false) {
+        if ($site['default'] === true) {
+          $default_site_entries++;
 
-        $routes['https://' . $site['url'] . '.{default}/'] = [
-          'type' => 'redirect',
-          'to' => 'https://www.' . $site['url'] . '.{default}/',
-        ];
-      }
-      elseif ($site['status'] !== 'production' && $site['default'] !== true) {
-        // Create routes for dev sites.
-        $routes['https://www.' . $site['url'] . '/'] = [
-          'type' => 'upstream',
-          'upstream' => $platform['name'] . ':http',
-          'cache' => [
-            'enabled' => 'false',
-          ],
-        ];
+          $routes['https://' . $site['url'] . '.{default}/'] = [
+              'type' => 'upstream',
+              'upstream' => $platform['name'] . ':http',
+              'cache' => [
+                  'enabled' => 'false',
+              ],
+          ];
+        } else {
+          $routes['https://' . $site['url'] . '/'] = [
+              'type' => 'upstream',
+              'upstream' => $platform['name'] . ':http',
+              'cache' => [
+                  'enabled' => 'false',
+              ],
+          ];
+        }
+      } else {
+        if ($site['default'] === true) {
+          $default_site_entries++;
 
-        $routes['https://' . $site['url'] . '/'] = [
-          'type' => 'redirect',
-          'to' => 'https://www.' . $site['url'] . '/',
-        ];
+          $routes['https://www.' . $site['url'] . '.{default}/'] = [
+              'type' => 'upstream',
+              'upstream' => $platform['name'] . ':http',
+              'cache' => [
+                  'enabled' => 'false',
+              ],
+          ];
+
+          $routes['https://' . $site['url'] . '.{default}/'] = [
+              'type' => 'redirect',
+              'to' => 'https://www.' . $site['url'] . '.{default}/',
+          ];
+        } elseif ($site['status'] !== 'production' && $site['default'] !== true) {
+          // Create routes for dev sites.
+          $routes['https://www.' . $site['url'] . '/'] = [
+              'type' => 'upstream',
+              'upstream' => $platform['name'] . ':http',
+              'cache' => [
+                  'enabled' => 'false',
+              ],
+          ];
+
+          $routes['https://' . $site['url'] . '/'] = [
+              'type' => 'redirect',
+              'to' => 'https://www.' . $site['url'] . '/',
+          ];
+        }
       }
     }
 
