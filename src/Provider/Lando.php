@@ -34,7 +34,7 @@ class Lando extends Hosting {
           'portforward' => TRUE,
           'core' => 'default',
           'config' => [
-            'dir' => '.lando/config/solr/7.x/default',
+            'dir' => '.lando/config/solr/',
           ],
         ];
       }
