@@ -43,7 +43,7 @@ class PlatformSH extends Hosting {
 
       // Create solr relationship.
       if (!empty($site['solr'])) {
-        $platform['relationships'][$site_id . '_solr'] = 'solr:' . $site['solr'];
+        $platform['relationships'][$site_id . '_solr'] = 'solr_8_11:' . $site['solr'];
         $solr_required = TRUE;
       }
 
