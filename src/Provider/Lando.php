@@ -30,11 +30,11 @@ class Lando extends Hosting {
       // Create solr relationship.
       if (!empty($site['solr'])) {
         $data['services'][$site_id . '_solr'] = [
-          'type' => 'solr:7',
+          'type' => 'solr:8.11',
           'portforward' => TRUE,
           'core' => 'default',
           'config' => [
-            'dir' => '.lando/config/solr/7.x/default',
+            'dir' => '.lando/config/solr/',
           ],
         ];
       }

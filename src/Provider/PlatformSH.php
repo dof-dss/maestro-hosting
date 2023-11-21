@@ -43,7 +43,7 @@ class PlatformSH extends Hosting {
 
       // Create solr relationship.
       if (!empty($site['solr'])) {
-        $platform['relationships'][$site_id . '_solr'] = 'solr:' . $site['solr'];
+        $platform['relationships'][$site_id . '_solr'] = 'solr_8_11:' . $site['solr'];
         $solr_required = TRUE;
       }
 
@@ -58,11 +58,11 @@ class PlatformSH extends Hosting {
 
       if (!empty($site['solr'])) {
         $solr_conf_dir = new TaggedValue('archive', 'solr_config/');
-        $services['solr']['configuration']['cores'][$site_id . '_index'] = [
+        $services['solr_8_11']['configuration']['cores'][$site_id . '_index'] = [
           'conf_dir' => $solr_conf_dir,
         ];
 
-        $services['solr']['configuration']['endpoints'][$site_id] = [
+        $services['solr_8_11']['configuration']['endpoints'][$site_id] = [
           'core' => $site_id . '_index',
         ];
         $solr_required = TRUE;
