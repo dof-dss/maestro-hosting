@@ -65,6 +65,12 @@ class Lando extends Hosting {
       $fs->copy($this->resourcesPath() . '/templates/redis.services.yml', '/web/sites/default/redis.services.yml');
     }
 
+    // Copy Solr configuration if it doesn't already exist.
+    if (!$fs->exists('/.lando/config/solr/solrcore.properties')) {
+        $io->writeln('Copying Solr configuration.');
+        $fs->copyDirectory($this->resourcesPath() . '/files/config/solr', '/.lando/config/solr');
+    }
+
     // Create public files directory if one doesn't already exist.
     if (!$fs->exists('/web/files')) {
       $io->writeln("Creating Drupal public files directory.");
