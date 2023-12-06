@@ -4,7 +4,7 @@ config:
   webroot: web
   database: mariadb
   php: '8.1'
-  composer_version: '2.0.7'
+  composer_version: '2.5.8'
   config:
     php: .lando/config/php.ini
     database: .lando/config/my.cnf
@@ -79,7 +79,7 @@ tooling:
   phpcs:
     description: Run PHPCS checks against all custom Drupal 8 code
     service: appserver
-    cmd: /app/phpcs.sh "/app" "/app/web/sites /app/web/modules/origins /app/web/modules/custom /app/web/themes/custom /app/web/profiles/corp-lite"
+    cmd: /app/phpcs.sh "/app" "/app/web/sites /app/web/modules/origins /app/web/modules/custom /app/web/themes/custom /app/web/profiles/custom/nicsdru_corplite_profile"
   drck:
     description: Run drupal-check for Drupal 9 compatibility e.g. 'lando drck ./'
     service: appserver

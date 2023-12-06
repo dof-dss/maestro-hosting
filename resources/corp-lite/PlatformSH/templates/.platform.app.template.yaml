@@ -55,7 +55,7 @@ hooks:
   build: |
     set -e
     echo "Update robots.txt with Corp Lite customisations"
-    cp -f web/robots_corp_lite.txt web/robots.txt
+    cp -f web/robots_custom.txt web/robots.txt
   # During post_deploy the sites are available (see https://docs.platform.sh/configuration/app/hooks.html)
   post_deploy: |
     set -e
