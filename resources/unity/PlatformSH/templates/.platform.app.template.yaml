@@ -85,6 +85,8 @@ hooks:
         drush -l $site -y cache-rebuild
         drush -l $site -y updatedb
         drush -l $site -y config-import
+        # Clear up any erroneous redirects
+        drush -l $site delete-redirects
         drush -l $site import-all-if-installed safe
         if [ "$PLATFORM_ENVIRONMENT_TYPE" = production ]; then
           # Disable QA logons
