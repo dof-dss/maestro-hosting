@@ -119,11 +119,15 @@ hooks:
     do
       result=$(drush -l $site st | grep "Drupal bootstrap : Successful" | awk {'print $4'})
       if [ "$result" = "Successful" ]; then
-        echo "****** $site cache clear ******"
-        cd /app/web/sites/$site
-        drush -l $site -y cache-rebuild
-        # Enable Fastly logging
-        drush -l $site enable-fastly-logging
+        # Any properly configured Unity site will have the unity_common module installed.
+        result2=$(drush -l $site pml | grep "unity_common" | awk {'print $5'})
+        if [ "$result2" = "Enabled" ]; then
+          echo "****** $site cache clear ******"
+          cd /app/web/sites/$site
+          drush -l $site -y cache-rebuild
+          # Enable Fastly logging
+          drush -l $site enable-fastly-logging
+        fi
       fi
     done
 
