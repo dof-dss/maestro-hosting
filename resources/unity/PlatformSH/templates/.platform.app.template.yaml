@@ -74,8 +74,8 @@ hooks:
       result=$(drush -l $site st | grep "Drupal bootstrap : Successful" | awk {'print $4'})
       if [ "$result" = "Successful" ]; then
         # Any properly configured Unity site will have the unity_common module installed.
-        result2=$(drush -l $site pml | grep "unity_common" | awk {'print $1'})
-        if [ "$result2" = "Unity" ]; then
+        result2=$(drush -l $site pml | grep "unity_common" | awk {'print $5'})
+        if [ "$result2" = "Enabled" ]; then
           echo "****** $site deployment ******"
           cd /app/web/sites/$site
           # Disable Fastly logging
