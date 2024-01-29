@@ -45,6 +45,9 @@ mounts:
   '/log':
     source: local
     source_path: 'log'
+  '/web/.well-known':
+    source: local
+    source_path: 'well-known'
 
 # Configuration of the build of this application.
 build:
@@ -170,6 +173,8 @@ web:
         '^\/sites\/.+\/themes\/.+\/images\/favicons\/.+\.webmanifest$':
           allow: true
           expires: 2w
+        '^/\.well-known/security\.txt$':
+          allow: true
 
         # Deny direct access to configuration files.
         '^/sites/sites\.php$':
