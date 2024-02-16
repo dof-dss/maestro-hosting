@@ -93,7 +93,9 @@ hooks:
           drush -l $site -y config-import
           # Clear up any erroneous redirects
           drush -l $site delete-redirects
-          drush -l $site import-all-if-installed safe
+          # Import blocks and taxonomies
+          drush -l $site import-blocks --choice=safe
+          drush -l $site import-taxonomies --choice=safe
           if [ "$PLATFORM_ENVIRONMENT_TYPE" = production ]; then
             # Disable QA logons
             drush -l $site bulk_update_qa_accounts disable
