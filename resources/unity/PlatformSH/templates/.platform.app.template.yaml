@@ -18,6 +18,7 @@ runtime:
   extensions:
     - apcu
     - redis
+    - blackfire
 
 # The size of the persistent disk of the application (in MB).
 disk: ''
