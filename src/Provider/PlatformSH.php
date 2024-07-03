@@ -43,7 +43,12 @@ class PlatformSH extends Hosting {
 
       // Create solr relationship.
       if (!empty($site['solr'])) {
-        $platform['relationships'][$site_id . '_solr'] = 'solr_8_11:' . $site['solr'];
+        // Make solr service name unique.
+        $solr_server_name = $site_id . '_solr';
+        if (preg_match('/intranet/i', $project->name())) {
+          $solr_server_name = $site_id . '_intranet_solr';
+        }
+        $platform['relationships'][$solr_server_name] = 'solr_8_11:' . $site['solr'];
         $solr_required = TRUE;
       }
 
