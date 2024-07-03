@@ -29,8 +29,11 @@ class Lando extends Hosting {
 
       // Create solr relationship.
       if (!empty($site['solr'])) {
-          // Use url to generate unique solr name as site_id is not unique enough.
-        $solr_server_name = str_replace('.','_',$site['url']) . '_solr';
+        // Make solr service name unique.
+        $solr_server_name = $site_id . '_solr';
+        if (preg_match('/intranet/i', $project->name())) {
+          $solr_server_name = $site_id . '_intranet_solr';
+        }
         $data['services'][$solr_server_name] = [
           'type' => 'solr:8.11',
           'portforward' => TRUE,
