@@ -19,31 +19,32 @@ class DDev extends Hosting {
   public function build(StyleInterface $io, FilesystemInterface $fs, ProjectInterface $project) {
     parent::build($io, $fs, $project);
     $data = [];
+    $solr_volumes = [];
+    $solr_command = '';
 
     $data['name'] = Utils::createApplicationId($project->name());
 
+    // Generate site specific settings.
     foreach ($project->sites() as $site_id => $site) {
 
       // Multisite hosts.
       $data['additional_hostnames'][] = $site['url'];
 
-      // Create solr relationship.
-//      if (!empty($site['solr'])) {
-//        // Make solr service name unique.
-//        $solr_server_name = $site_id . '_solr';
-//        if (preg_match('/intranet/i', $project->name())) {
-//          $solr_server_name = $site_id . '_intranet_solr';
-//        }
-//        $data['services'][$solr_server_name] = [
-//          'type' => 'solr:8.11',
-//          'portforward' => TRUE,
-//          'core' => 'default',
-//          'config' => [
-//            'dir' => '.lando/config/solr/',
-//          ],
-//        ];
-//      }
+      // Create solr command for multiple cores.
+      if (!empty($site['solr'])) {
+        $solr_core = $site_id;
+        $solr_conf = 'solr-' . $site_id . '-conf';
+
+        $solr_volumes[] =  './solr-cores/' . $solr_core . ':/' . $solr_conf;
+        $solr_command .= ' precreate-core ' . $solr_core . ' /' . $solr_conf . ';';
+        $fs->copyDirectory($this->resourcesPath() . '/files/solr/conf', '/.ddev/solr-cores/' . $solr_core . '/conf');
+      }
     }
+
+    $solr_command = 'bash -c "VERBOSE=yes docker-entrypoint.sh ' . ltrim($solr_command) . ' exec solr -f"';
+    $solr_data = $fs->read($this->resourcesPath() . '/templates/docker-compose.solr_extra.yaml');
+    $solr_data['services']['solr']['volumes'] = $solr_volumes;
+    $solr_data['services']['solr']['entrypoint'] = $solr_command;
 
     $fs->createDirectory('/.ddev');
 
@@ -54,6 +55,10 @@ class DDev extends Hosting {
     // Create project specific DDev file.
     $io->writeln("Creating DDev project configuration file.");
     $fs->write('/.ddev/config.maestro.yaml', $data, TRUE);
+
+    // Create Solr config.
+    $io->writeln("Creating DDev Solr configuration file.");
+    $fs->write('/.ddev/docker-compose.solr_extra.yaml', $solr_data, TRUE);
 
     // Copy DDev resources to the project.
     $io->writeln("Copying DDev resources to project.");
