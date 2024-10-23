@@ -2,6 +2,8 @@
 
 # Variables to indicate key settings files or directories for Drupal.
 DRUPAL_ROOT=/app/web
+DRUPAL_SETTINGS_FILE=$DRUPAL_ROOT/sites/default/settings.php
+DRUPAL_SERVICES_FILE=$DRUPAL_ROOT/sites/default/services.yml
 
 # If we don't have a Drupal install, download it.
 if [ ! -d "/app/web/core" ]; then
