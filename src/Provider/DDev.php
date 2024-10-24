@@ -28,7 +28,7 @@ class DDev extends Hosting {
     foreach ($project->sites() as $site_id => $site) {
 
       // Multisite hosts.
-      $data['additional_hostnames'][] = $site['url'];
+      $data['additional_hostnames'][] = $site_id;
 
       // Create solr command for multiple cores.
       if (!empty($site['solr'])) {
