@@ -71,7 +71,7 @@ class DDev extends Hosting {
     }
 
     // Create DDev provider.
-    $provider_data = $fs->read($this->resourcesPath() . '/templates/dd_provider_unity.yaml');
+    $provider_data = $fs->read($this->resourcesPath() . '/templates/ddev_provider_unity.yaml');
 
     foreach ($project->sites() as $site_id => $site) {
       $provider_data['db_pull_command']['command'] .= 'platform db:dump --yes ${PLATFORM_APP:+"--app=${PLATFORM_APP}"} --relationship=' . $site_id . ' --gzip --file=/var/www/html/.ddev/.downloads/db_' . $site_id . '.sql.gz --project="${PLATFORM_PROJECT:-setme}" --environment="${PLATFORM_ENVIRONMENT:-setme}"' . PHP_EOL;
