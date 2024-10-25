@@ -27,6 +27,6 @@ fi
 
 if [ ! -d $DRUPAL_ROOT/sites/default/settings.local.php ]; then
   echo "Creating local Drupal settings and developent services files"
-  cp -v /var/www/html/.ddev/homeadditions/config/drupal.settings.php $DRUPAL_ROOT/sites/default/settings.local.php
-  cp -v /var/www/html/.ddev/homeadditions/config/drupal.services.yml $DRUPAL_ROOT/sites/local.development.services.yml
+  cp -v /var/www/html/.ddev/homeadditions/drupal.settings.php $DRUPAL_ROOT/sites/default/settings.local.php
+  cp -v /var/www/html/.ddev/homeadditions/drupal.services.yml $DRUPAL_ROOT/sites/local.development.services.yml
 fi
