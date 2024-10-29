@@ -115,6 +115,16 @@ class DDev extends Hosting {
       }
     }
 
+    if (empty($env_data['PLATFORM_PROJECT'])) {
+      $env_data['PLATFORM_PROJECT'] = $project->id();
+      $fs->write('/.ddev/.env', $env_data);
+    }
+
+    if (empty($env_data['PLATFORM_ENVIRONMENT'])) {
+      $env_data['PLATFORM_ENVIRONMENT'] = 'edge';
+      $fs->write('/.ddev/.env', $env_data);
+    }
+
     // Inform the user if composer install is needed.
     if (!$fs->exists('/vendor')) {
       $this->addInstructions("Run 'ddev composer install'");
