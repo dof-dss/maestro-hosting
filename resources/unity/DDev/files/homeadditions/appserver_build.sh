@@ -30,3 +30,8 @@ if [ ! -d $DRUPAL_ROOT/sites/default/settings.local.php ]; then
   cp -v /var/www/html/.ddev/homeadditions/drupal.settings.php $DRUPAL_ROOT/sites/default/settings.local.php
   cp -v /var/www/html/.ddev/homeadditions/drupal.services.yml $DRUPAL_ROOT/sites/local.development.services.yml
 fi
+
+# Create DDev 'app' link for mapping web/sites entries to the project/sites dir.
+echo "Creating App symlink "
+cd /
+sudo ln -sf /var/www/html /app
