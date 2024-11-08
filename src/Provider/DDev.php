@@ -22,7 +22,8 @@ class DDev extends Hosting {
     $solr_volumes = [];
     $solr_command = '';
 
-    $data['name'] = Utils::createApplicationId($project->name());
+    // DDEV project name must not contain spaces.
+    $data['name'] = Utils::createApplicationId(str_replace(' ', '.', $project->name()));
 
     // Generate site specific settings.
     foreach ($project->sites() as $site_id => $site) {
