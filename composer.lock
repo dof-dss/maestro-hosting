@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "dof-dss/maestro-core",
-            "version": "1.0.4",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dof-dss/maestro-core.git",
-                "reference": "3f8420e9af4b5514507de233ee9e3e1361e4f2a9"
+                "reference": "8af98b2e3fc7a262dfa34f1d2db98111d6d63b75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dof-dss/maestro-core/zipball/3f8420e9af4b5514507de233ee9e3e1361e4f2a9",
-                "reference": "3f8420e9af4b5514507de233ee9e3e1361e4f2a9",
+                "url": "https://api.github.com/repos/dof-dss/maestro-core/zipball/8af98b2e3fc7a262dfa34f1d2db98111d6d63b75",
+                "reference": "8af98b2e3fc7a262dfa34f1d2db98111d6d63b75",
                 "shasum": ""
             },
             "type": "library",
@@ -39,9 +39,9 @@
             "description": "Maestro core composition project",
             "support": {
                 "issues": "https://github.com/dof-dss/maestro-core/issues",
-                "source": "https://github.com/dof-dss/maestro-core/tree/1.0.4"
+                "source": "https://github.com/dof-dss/maestro-core/tree/1.0.5"
             },
-            "time": "2024-03-20T15:47:16+00:00"
+            "time": "2024-11-12T14:06:57+00:00"
         }
     ],
     "packages-dev": [],
@@ -52,5 +52,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
