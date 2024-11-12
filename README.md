@@ -89,6 +89,28 @@ services:
       - { name: maestro.hosting }
 ```
 
+# DDev
+
+The DDev hosting provider brings some changes to local hosting compared to Lando.
+
+- All multisite databases are hosted in a single database service (db).
+- All solr cores are hosted on a single Solr service (solr). 
+- Code standards commands are path aware.
+
+Be mindful that if you alter/delete any of the db/solr services you will affect all of your local sites.
+
+All multisite databases can be imported to your local instance from the platform development environment using:
+
+`ddev pull unity`
+
+This will overwrite all multisite databases within your local environment.
+
+`phpcs` and `drck` commands are now path aware and will run against the directory on the service
+that is mapped to your local directory.
+e.g. if I run `ddev phpcs` within my `/Users/devuser1/project/unity_svr1/project/sites/pbni` directory
+it will perform the check against the pbni directory in the ddev web service.
+
+
 
 
 
