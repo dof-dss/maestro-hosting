@@ -72,14 +72,23 @@ class DDev extends Hosting {
     }
 
     // Create DDev provider.
-    $provider_data = $fs->read($this->resourcesPath() . '/templates/ddev_provider_unity.yaml');
+    if ($project->type() == 'unity') {
+      $provider_data = $fs->read($this->resourcesPath() . '/templates/ddev_provider_unity.yaml');
+    } else if ($project->type() == 'corp-lite') {
+      $provider_data = $fs->read($this->resourcesPath() . '/templates/ddev_provider_corplite.yaml');
+    }
 
     foreach ($project->sites() as $site_id => $site) {
       $provider_data['db_pull_command']['command'] .= 'platform db:dump --yes ${PLATFORM_APP:+"--app=${PLATFORM_APP}"} --relationship=' . $site_id . ' --gzip --file=/var/www/html/.ddev/.downloads/db_' . $site_id . '.sql.gz --project="${PLATFORM_PROJECT:-setme}" --environment="${PLATFORM_ENVIRONMENT:-setme}"' . PHP_EOL;
       $provider_data['db_import_command']['command'] .= 'gzip -dc .ddev/.downloads/db_' . $site_id . '.sql.gz | ddev import-db --database=' . $site_id . ' --skip-hooks ' . PHP_EOL;
     }
 
-    $fs->write('/.ddev/providers/unity.yaml', $provider_data, TRUE);
+    if ($project->type() == 'unity') {
+      $fs->write('/.ddev/providers/unity.yaml', $provider_data, TRUE);
+    } else if ($project->type() == 'corp-lite') {
+      $fs->write('/.ddev/providers/corplite.yaml', $provider_data, TRUE);
+    }
+
 
     // Create public files directory if one doesn't already exist.
     if (!$fs->exists('/web/files')) {

@@ -1,0 +1,4 @@
+services:
+  solr:
+    volumes:
+    entrypoint:
