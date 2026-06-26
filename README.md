@@ -83,15 +83,15 @@ services:
     class: 'Maestro\Hosting\Provider\PlatformSH'
     tags:
       - { name: maestro.hosting }
-  hosting.lando:
-    class: 'Maestro\Hosting\Provider\Lando'
+  hosting.ddev:
+    class: 'Maestro\Hosting\Provider\DDev'
     tags:
       - { name: maestro.hosting }
 ```
 
 # DDev
 
-The DDev hosting provider brings some changes to local hosting compared to Lando.
+The DDev hosting provider configures the local development environment.
 
 - All multisite databases are hosted in a single database service (db).
 - All solr cores are hosted on a single Solr service (solr). 
@@ -109,7 +109,6 @@ This will overwrite all multisite databases within your local environment.
 that is mapped to your local directory.
 e.g. if I run `ddev phpcs` within my `/Users/devuser1/project/unity_svr1/project/sites/pbni` directory
 it will perform the check against the pbni directory in the ddev web service.
-
 
 
 
