@@ -141,7 +141,6 @@ class DDev extends Hosting {
     }
 
     // TODO: Write a per project provider and display usage instructions.
-//    $this->addInstructions("Import platform databases using 'lando db-import <database name> <dump file>'");
   }
 
 }

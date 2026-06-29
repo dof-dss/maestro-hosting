@@ -15,6 +15,11 @@ use Symfony\Component\Yaml\Tag\TaggedValue;
 class PlatformSH extends Hosting {
 
   /**
+   * Platform service key for generated Solr 9 services.
+   */
+  private const SOLR_SERVICE = 'solr_9_9';
+
+  /**
    * {@inheritdoc}
    */
   public function build(StyleInterface $io, FilesystemInterface $fs, ProjectInterface $project) {
@@ -48,7 +53,7 @@ class PlatformSH extends Hosting {
         if (preg_match('/intranet/i', $project->name())) {
           $solr_server_name = $site_id . '_intranet_solr';
         }
-        $platform['relationships'][$solr_server_name] = 'solr_8_11:' . $site['solr'];
+        $platform['relationships'][$solr_server_name] = self::SOLR_SERVICE . ':' . $site['solr'];
         $solr_required = TRUE;
       }
 
@@ -63,11 +68,11 @@ class PlatformSH extends Hosting {
 
       if (!empty($site['solr'])) {
         $solr_conf_dir = new TaggedValue('archive', 'solr_config/');
-        $services['solr_8_11']['configuration']['cores'][$site_id . '_index'] = [
+        $services[self::SOLR_SERVICE]['configuration']['cores'][$site_id . '_index'] = [
           'conf_dir' => $solr_conf_dir,
         ];
 
-        $services['solr_8_11']['configuration']['endpoints'][$site_id] = [
+        $services[self::SOLR_SERVICE]['configuration']['endpoints'][$site_id] = [
           'core' => $site_id . '_index',
         ];
         $solr_required = TRUE;
@@ -159,7 +164,7 @@ class PlatformSH extends Hosting {
 
     // Remove Solr config if none of the sites use Solr.
     if (!$solr_required) {
-      unset($services['solr']);
+      unset($services[self::SOLR_SERVICE]);
     }
 
     // Write Platform configuration files.
