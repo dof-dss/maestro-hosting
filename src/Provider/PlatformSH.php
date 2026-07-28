@@ -20,6 +20,11 @@ class PlatformSH extends Hosting {
   private const SOLR_SERVICE = 'solr_9_9';
 
   /**
+   * Directory containing repository-owned Solr configsets.
+   */
+  private const SOLR_CONFIGSETS_DIRECTORY = 'solr_configsets';
+
+  /**
    * {@inheritdoc}
    */
   public function build(StyleInterface $io, FilesystemInterface $fs, ProjectInterface $project) {
@@ -67,7 +72,7 @@ class PlatformSH extends Hosting {
       ];
 
       if (!empty($site['solr'])) {
-        $solr_conf_dir = new TaggedValue('archive', 'solr_config/');
+        $solr_conf_dir = new TaggedValue('archive', self::SOLR_CONFIGSETS_DIRECTORY . '/' . $site_id . '/conf/');
         $services[self::SOLR_SERVICE]['configuration']['cores'][$site_id . '_index'] = [
           'conf_dir' => $solr_conf_dir,
         ];
@@ -173,9 +178,9 @@ class PlatformSH extends Hosting {
     $fs->write('/.platform/services.yaml', $services, TRUE);
     $fs->write('/.platform/routes.yaml', $routes, TRUE);
 
-    // Copy Solr configuration to platform directory.
-    $io->writeln('Copying Solr configuration.');
-    $fs->copyDirectory($this->resourcesPath() . '/files/solr_config', '/.platform/solr_config');
+    if ($solr_required) {
+      $this->addInstructions('Generate and commit each site configset under .platform/' . self::SOLR_CONFIGSETS_DIRECTORY . '/<site>/conf before deployment.');
+    }
 
     // Copy environment file.
     $io->writeln('Copying environment file.');

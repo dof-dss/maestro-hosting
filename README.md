@@ -94,7 +94,8 @@ services:
 The DDev hosting provider configures the local development environment.
 
 - All multisite databases are hosted in a single database service (db).
-- All solr cores are hosted on a single Solr service (solr). 
+- All Solr cores are hosted on a single Solr service (`solr`), with one
+  consumer-owned configset per site. See [Solr 9 ownership](docs/solr-architecture.md).
 - Code standards commands are path aware.
 
 Be mindful that if you alter/delete any of the db/solr services you will affect all of your local sites.
@@ -109,7 +110,6 @@ This will overwrite all multisite databases within your local environment.
 that is mapped to your local directory.
 e.g. if I run `ddev phpcs` within my `/Users/devuser1/project/unity_svr1/project/sites/pbni` directory
 it will perform the check against the pbni directory in the ddev web service.
-
 
 
 

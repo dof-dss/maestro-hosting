@@ -19,8 +19,7 @@ class DDev extends Hosting {
   public function build(StyleInterface $io, FilesystemInterface $fs, ProjectInterface $project) {
     parent::build($io, $fs, $project);
     $data = [];
-    $solr_volumes = [];
-    $solr_command = '';
+    $solr_sites = [];
 
     // DDEV project name must not contain spaces.
     $data['name'] = Utils::createApplicationId(str_replace(' ', '.', $project->name()));
@@ -33,19 +32,12 @@ class DDev extends Hosting {
 
       // Create solr command for multiple cores.
       if (!empty($site['solr'])) {
-        $solr_core = $site_id;
-        $solr_conf = 'solr-' . $site_id . '-conf';
-
-        $solr_volumes[] =  './solr-cores/' . $solr_core . ':/' . $solr_conf;
-        $solr_command .= ' precreate-core ' . $solr_core . ' /' . $solr_conf . ';';
-        $fs->copyDirectory($this->resourcesPath() . '/files/solr/conf', '/.ddev/solr-cores/' . $solr_core . '/conf');
+        $solr_sites[] = $site_id;
       }
     }
 
-    $solr_command = 'bash -c "VERBOSE=yes docker-entrypoint.sh ' . ltrim($solr_command) . ' exec solr -f"';
     $solr_data = $fs->read($this->resourcesPath() . '/templates/docker-compose.solr_extra.yaml');
-    $solr_data['services']['solr']['volumes'] = $solr_volumes;
-    $solr_data['services']['solr']['entrypoint'] = $solr_command;
+    $solr_data['services']['solr']['environment']['SOLR_SITES'] = implode(' ', $solr_sites);
 
     $fs->createDirectory('/.ddev');
 
@@ -60,6 +52,13 @@ class DDev extends Hosting {
     // Create Solr config.
     $io->writeln("Creating DDev Solr configuration file.");
     $fs->write('/.ddev/docker-compose.solr_extra.yaml', $solr_data, TRUE);
+
+    if (!empty($solr_sites)) {
+      $this->addInstructions('Generate and commit each site configset under .platform/solr_configsets/<site>/conf before starting DDEV.');
+
+      $io->writeln("Copying Solr maintenance scripts to project.");
+      $fs->copyDirectory($this->resourcesPath() . '/scripts', '/scripts/solr');
+    }
 
     // Copy DDev resources to the project.
     $io->writeln("Copying DDev resources to project.");
@@ -81,6 +80,10 @@ class DDev extends Hosting {
     foreach ($project->sites() as $site_id => $site) {
       $provider_data['db_pull_command']['command'] .= 'platform db:dump --yes ${PLATFORM_APP:+"--app=${PLATFORM_APP}"} --relationship=' . $site_id . ' --gzip --file=/var/www/html/.ddev/.downloads/db_' . $site_id . '.sql.gz --project="${PLATFORM_PROJECT:-setme}" --environment="${PLATFORM_ENVIRONMENT:-setme}"' . PHP_EOL;
       $provider_data['db_import_command']['command'] .= 'gzip -dc .ddev/.downloads/db_' . $site_id . '.sql.gz | ddev import-db --database=' . $site_id . ' --skip-hooks ' . PHP_EOL;
+    }
+
+    if (!empty($solr_sites)) {
+      $provider_data['db_import_command']['command'] .= 'scripts/solr/configure-local-connectors --all' . PHP_EOL;
     }
 
     if ($project->type() == 'unity') {
