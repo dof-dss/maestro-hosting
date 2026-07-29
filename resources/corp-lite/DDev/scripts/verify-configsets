@@ -30,10 +30,21 @@ for required_file in \
   .ddev/docker-compose.solr.yaml \
   .ddev/docker-compose.solr_extra.yaml \
   .ddev/solr/Dockerfile \
-  .ddev/solr/security.json \
   .ddev/solr/create-or-refresh-cores.sh; do
   [[ -f "$required_file" ]] || fail "missing shared runtime file ${required_file}"
 done
+
+# Local Solr is intentionally unauthenticated, so no default HTTP credentials
+# or fixed security policy should be committed.
+[[ ! -e .ddev/solr/security.json ]] \
+  || fail ".ddev/solr/security.json should not exist for credential-free DDEV Solr"
+if grep -R -Eq 'SOLRUSER|SOLRPASS|SOLR_AUTH_TYPE|SOLR_AUTHENTICATION_OPTS' \
+  .ddev/.env.sample \
+  .ddev/docker-compose.solr.yaml \
+  .ddev/solr \
+  scripts/solr/configure-local-connectors; then
+  fail "DDEV Solr runtime contains a committed credential or credential variable"
+fi
 
 # Each configset has one canonical source. Legacy copies would drift silently.
 for obsolete_path in .platform/solr_config .ddev/solr-cores .ddev/solr/conf .ddev/solr/configsets; do
@@ -85,6 +96,9 @@ for site in "${declared_sites[@]}"; do
         || fail "${site} local connector does not use host ${expected_local_host}"
       grep -Eq "core: ${site}_index$" "$local_patch" \
         || fail "${site} local connector does not use core ${site}_index"
+      if grep -Eq '^[[:space:]]+(username|password):' "$local_patch"; then
+        fail "${site} local connector patch contains committed HTTP credentials"
+      fi
     fi
   else
     echo "NOTICE: ${site} declares Solr hosting but has no committed solr_default server config."

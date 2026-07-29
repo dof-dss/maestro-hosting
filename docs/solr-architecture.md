@@ -5,8 +5,8 @@ without owning their search schemas.
 
 ## Maestro-owned behaviour
 
-- Solr 9.9 image, authentication, modules, health check, and persistent DDEV
-  data volume.
+- Solr 9.9 image, modules, credential-free local health check, and persistent
+  DDEV data volume.
 - One DDEV startup script that creates or refreshes `<site>_index` cores from
   repository configsets.
 - One read-only `.platform/solr_configsets` mount rather than a generated mount
