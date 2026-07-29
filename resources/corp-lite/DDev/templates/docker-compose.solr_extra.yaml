@@ -1,4 +1,7 @@
 services:
   solr:
+    environment:
+      SOLR_SITES:
     volumes:
-    entrypoint:
+      - '${DDEV_APPROOT}/.platform/solr_configsets:/solr-configsets:ro'
+    entrypoint: ['bash', '/mnt/ddev_config/solr/create-or-refresh-cores.sh']
