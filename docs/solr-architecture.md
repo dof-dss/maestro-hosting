@@ -18,6 +18,11 @@ without owning their search schemas.
   that clears stale plugin caches and verifies every enabled Solr-backed site
   against its project-specific container and `<site>_index` core.
 
+Static verification covers provisioned infrastructure only. Each declared Solr
+site must have a `<site>_index` core, a repository-owned configset, and matching
+Platform and DDEV declarations. It intentionally does not inspect Drupal's
+active Search API backend or local connector patches.
+
 ## Consumer-owned behaviour
 
 Each consumer repository owns:
