@@ -25,6 +25,24 @@ Changes to content in the files directory can be added and published as a new re
 If you require changes to a template you should make your changes but also look at the 
 hosting provider class to check the alterations made to the file.
 
+## Drupal 11 hosting
+
+The Unity and corp-lite templates use PHP 8.3 and MariaDB 10.11 for both
+DDEV and Platform.sh. The DDEV environment samples use the MySQL driver
+namespace `Drupal\mysql\Driver\Database\mysql`; the old
+`Drupal\Core\Database\Driver\mysql` namespace was removed in Drupal 11.
+See the [Drupal database driver change record](https://www.drupal.org/node/3129492).
+
+Existing projects must update `DB_NAMESPACE` in their `.ddev/.env.sample`
+and `.ddev/.env` files manually, then restart DDEV. The hosting provider
+preserves existing environment files.
+
+The MariaDB template version is the target for generated configuration.
+For existing Platform.sh databases, follow the
+[database upgrade procedure](https://fixed.docs.upsun.com/add-services/mysql.html#upgrade):
+take a backup, test the upgrade in a separate environment before production,
+and retain the existing database service name (`db`) to preserve its data.
+
 ## Updating hosting build steps
 
 If you need to alter how a hosting provider constructs the overall hosting setup you will 
