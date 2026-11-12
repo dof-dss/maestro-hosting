@@ -181,7 +181,7 @@ web:
         '^\/sites\/.+\/themes\/.+\/images\/favicons\/.+\.webmanifest$':
           allow: true
           expires: 2w
-        '^/\.well-known/security\.txt$':
+        '^/\.well-known/*?\.txt$':
           allow: true
 
         # Deny direct access to configuration files.
