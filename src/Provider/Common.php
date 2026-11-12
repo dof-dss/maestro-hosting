@@ -48,6 +48,14 @@ class Common extends Hosting {
       }
     }
 
+    // Install upgrade prerequisites for project types that provide them.
+    if ($fs->exists($this->resourcesPath() . '/files/UpgradePreflightCommands.php')) {
+      $fs->createDirectory('/drush/Commands');
+      $fs->createDirectory('/scripts/drupal11');
+      $fs->copy($this->resourcesPath() . '/files/UpgradePreflightCommands.php', '/drush/Commands/UpgradePreflightCommands.php');
+      $fs->copy($this->resourcesPath() . '/files/preflight.php', '/scripts/drupal11/preflight.php');
+    }
+
     // Copy base Drupal services file is one doesn't already exist.
     if (!$fs->exists('/web/sites/services.yml')) {
       $io->text('Creating Drupal services file from defaults.');
