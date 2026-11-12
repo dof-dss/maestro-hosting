@@ -64,14 +64,6 @@ hooks:
   post_deploy: |
     set -e
 
-    # Save the Fastly service value and overwrite with a dummy one in order to break
-    # the connection to Fastly, otherwise any cache clear of any site will purge the
-    # entire Fastly cache - we don't want this to happen as we'd like Fastly to continue
-    # serving the sites to anonymous users during a release.
-    echo "***** Breaking connection to Fastly ******"
-    temp=$FASTLY_API_SERVICE
-    export FASTLY_API_SERVICE=dummyservice
-
     # For each multi site - run db-updates and import config.
     for site in <sites_placeholder>
     do
@@ -82,6 +74,8 @@ hooks:
         if [ "$result2" = "Enabled" ]; then
           echo "****** $site deployment ******"
           cd /app/web/sites/$site
+          # Disable Fastly purging while updating this site.
+          drush -l "$site" state:set fastly.state.valid_purge_credentials false --input-format=json
           # Disable Fastly logging
           drush -l $site disable-fastly-logging
           # Readonlymode module should be installed on all sites,
@@ -105,6 +99,8 @@ hooks:
           fi
           # Turn off readonly mode.
           drush -l $site cset readonlymode.settings enabled 0 -y
+          # Re-enable Fastly purging after successful site updates.
+          drush -l "$site" state:set fastly.state.valid_purge_credentials true --input-format=json
         else
           echo "****** Skipping $site as not fully installed ******"
           echo ""
@@ -114,10 +110,6 @@ hooks:
         echo ""
       fi
     done
-
-    # Reconnect to Fastly
-    echo "***** Reinstate connection to Fastly ******"
-    export FASTLY_API_SERVICE=$temp
 
     # For each multi site - clear cache (including Fastly cache)
     for site in <sites_placeholder>
