@@ -182,6 +182,12 @@ class PlatformSH extends Hosting {
       $this->addInstructions('Generate and commit each site configset under .platform/' . self::SOLR_CONFIGSETS_DIRECTORY . '/<site>/conf before deployment.');
     }
 
+    // Copy the Node.js pin for project types that provide one.
+    if ($fs->exists($this->resourcesPath() . '/files/.nvmrc')) {
+      $io->writeln('Copying Node.js version pin.');
+      $fs->copy($this->resourcesPath() . '/files/.nvmrc', '/.nvmrc');
+    }
+
     // Copy environment file.
     $io->writeln('Copying environment file.');
     $fs->copy($this->resourcesPath() . '/files/.environment', '/.environment');

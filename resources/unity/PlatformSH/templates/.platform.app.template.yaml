@@ -9,7 +9,13 @@ name: ''
 # The runtime the application uses.
 type: 'php:8.3'
 
+variables:
+  env:
+    N_PREFIX: /app/.global
+
 dependencies:
+  nodejs:
+    n: '11.0.0'
   php:
     composer/composer: '^2'
 
@@ -58,6 +64,12 @@ build:
 hooks:
   build: |
     set -e
+    echo ">>> Install the pinned, patched Node.js version"
+    # Install the pinned version from .nvmrc.
+    n auto
+    export PATH="$N_PREFIX/bin:$PATH"
+    # Clear cached command locations so the shell finds the new copy.
+    hash -r
     echo "Update robots.txt with Unity customisations"
     cp -f web/robots_unity.txt web/robots.txt
   # During post_deploy the sites are available (see https://docs.platform.sh/configuration/app/hooks.html)
